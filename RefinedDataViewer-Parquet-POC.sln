@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB76BB5E-4890-40C9-A928-642D12A4A2AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataViewerApi", "src\DataViewerApi\DataViewerApi.csproj", "{A15F9D3E-6963-423A-9AFA-8565E1BB1275}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataWorker", "src\DataWorker\DataWorker.csproj", "{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A15F9D3E-6963-423A-9AFA-8565E1BB1275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15F9D3E-6963-423A-9AFA-8565E1BB1275}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15F9D3E-6963-423A-9AFA-8565E1BB1275}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15F9D3E-6963-423A-9AFA-8565E1BB1275}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A15F9D3E-6963-423A-9AFA-8565E1BB1275} = {DB76BB5E-4890-40C9-A928-642D12A4A2AD}
+		{0AE2C2EA-A95E-4133-89D4-68CD5005B2F2} = {DB76BB5E-4890-40C9-A928-642D12A4A2AD}
+	EndGlobalSection
+EndGlobal
