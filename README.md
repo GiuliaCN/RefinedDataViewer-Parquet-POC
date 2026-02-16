@@ -25,3 +25,20 @@ To run the Worker:
 cd ../MeuWorker
 dotnet build
 ```
+
+## Creating files (optional)
+You can create files to use in the application with the .py scripts in the scripts folder.
+
+They will create a folder 'Data' if it doesn't exist and .csv files will be there.
+
+To create catalog.csv:
+```
+cd ./scripts
+python .\create_catalog_file.py
+```
+
+To create basevolume.csv:
+```
+cd ./scripts
+python .\create_basevolume_file.py
+```
