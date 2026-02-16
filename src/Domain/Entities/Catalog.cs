@@ -8,8 +8,8 @@ namespace Domain.Entities
     // Input file and Parquet file
     public class Catalog
     {
-        public int SKU {get; set;} // Filter option
-        public int Category {get; set;} // Filter option
         public int GroupKeyId {get; set;}
+        public int Category {get; set;} // Filter option
+        public int SKU {get; set;} // Filter option
     }
 }

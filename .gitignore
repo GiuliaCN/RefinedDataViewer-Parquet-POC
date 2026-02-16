@@ -32,8 +32,11 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Não subir env
+# Ignore env
 .env
+
+# Ignore files
+/Data
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
