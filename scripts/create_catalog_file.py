@@ -1,10 +1,12 @@
 import random
 import csv
 from pathlib import Path
+import os
 
 def main():
     parent_dir = Path.cwd().parent
     data_dir = parent_dir / 'Data'
+    os.makedirs(data_dir, exist_ok=True)
     
     csv_file_path = data_dir / 'catalog.csv'
     data = CreateTable()
