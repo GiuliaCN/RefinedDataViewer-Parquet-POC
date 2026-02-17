@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface ITableRepository
     {
-        Task<IEnumerable<TableViewLine>> GetTableViewAsync(string filter);
+        Task<IEnumerable<TableItemChange>> GetTableItemChangeAsync();
     }
 }

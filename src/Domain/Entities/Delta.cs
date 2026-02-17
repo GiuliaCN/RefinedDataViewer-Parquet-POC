@@ -4,8 +4,9 @@ namespace Domain.Entities
     {
         public int Id {get; set;}
         public int GroupKey {get; set;}
-        public int Value {get; set;}
+        public double Value {get; set;}
         public string Filter {get; set;} = "";
+        public int FilterValue {get; set;}
         public DateTime TimeStamp {get; set;}
     }
 }

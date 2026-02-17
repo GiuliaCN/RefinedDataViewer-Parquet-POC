@@ -1,3 +1,5 @@
+using Application.Interfaces;
+using Application.Services;
 using Dapper;
 using Domain.Interfaces;
 using Infrastructure.Repository;
@@ -11,6 +13,8 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddScoped<IProcessRepository, ProcessRepository>();
 builder.Services.AddScoped<IDeltaRepository, DeltaRepository>();
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -60,8 +64,9 @@ static void EnsureDatabaseCreated(string connectionString)
         CREATE TABLE Delta (
             Id INT PRIMARY KEY IDENTITY,
             GroupKey INT,
-            Value INT,
+            Value FLOAT,
             Filter VARCHAR(255),
+            FilterValue INT,
             TimeStamp DATETIME DEFAULT GETDATE()
         )");
 }

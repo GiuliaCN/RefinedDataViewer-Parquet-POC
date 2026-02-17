@@ -10,6 +10,6 @@ namespace Domain.Entities
     {
         public int SKU {get; set;}
         public int Client {get; set;}
-        public int Value {get; set;}
+        public double Value {get; set;}
     }
 }
