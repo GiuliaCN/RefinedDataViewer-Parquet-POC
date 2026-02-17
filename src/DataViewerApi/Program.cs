@@ -9,6 +9,8 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
     ?? throw new InvalidOperationException("Connection string not found");
 
 builder.Services.AddScoped<IProcessRepository, ProcessRepository>();
+builder.Services.AddScoped<IDeltaRepository, DeltaRepository>();
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -57,7 +59,7 @@ static void EnsureDatabaseCreated(string connectionString)
         IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Delta')
         CREATE TABLE Delta (
             Id INT PRIMARY KEY IDENTITY,
-            GroupKeyId INT,
+            GroupKey INT,
             Value INT,
             Filter VARCHAR(255),
             TimeStamp DATETIME DEFAULT GETDATE()
