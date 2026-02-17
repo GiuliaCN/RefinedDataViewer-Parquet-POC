@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
@@ -16,12 +17,18 @@ namespace DataViewerApi.Controllers
         private readonly ICatalogRepository _catalogRepository = catalogRepository; 
         
         [HttpGet]
-        //[Route("/value-filters/{filter}")]
-        //public async Task<ActionResult<IEnumerable<int>>> Get(string filter)
-        public async Task<ActionResult<IEnumerable<Catalog>>> Get()
+        [EndpointSummary("List top 50 values available from a column of Catalog. Options: 'Category', 'SKU'")]
+        [Route("/value-filters/{filter}")]
+        public async Task<ActionResult> Get(string filter)
         {
-            var processList = await _catalogRepository.GetAllAsync();
-            return Ok(processList.Take(10));
+            var fullCatalog = await _catalogRepository.GetAllAsync();
+            if(filter == "Category")
+            {
+                var categories = fullCatalog.GroupBy(x => x.Category).Select(x => x.Key);
+                return Ok(categories.Take(50));
+            }
+            else if(filter == "SKU") return Ok(fullCatalog.Take(50).Select(x => x.SKU));
+            else return BadRequest("Invalid Filter");
         }
         
         // [HttpPost]
