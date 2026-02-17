@@ -15,7 +15,7 @@ namespace Infrastructure.Repository
         public async Task AddAsync (Delta delta)
         {
             using IDbConnection db = new SqlConnection(_connectionString);
-            const string sql = "INSERT INTO Delta (GroupKey, Value, Filter, TimeStamp) VALUES (@GroupKey, @Value, @Filter, GETDATE())";
+            const string sql = "INSERT INTO Delta (GroupKey, Value, Filter, FilterValue, TimeStamp) VALUES (@GroupKey, @Value, @Filter, @FilterValue, GETDATE())";
             await db.ExecuteAsync(sql, delta);
         }
         public async Task<IEnumerable<Delta>> GetAllAsync()
