@@ -8,16 +8,9 @@ namespace Domain.Entities
     public class Process
     {        
         public int Id {get; set;}
-        public string NameFile {get; set;} = "";
-        public Status Status {get; set;}
-        public DateTime Start {get; set;}
-        public DateTime End {get; set;}
-    }
-
-    public enum Status
-    {
-        AwaitingProcessing,
-        Completed,
-        Error
+        public string Code {get; set;} = "ProcessFiles";
+        public bool Active {get; set;} = true;
+        public DateTime StartDate {get; set;} = new DateTime(1900,1,1);
+        public DateTime EndDate {get; set;} = new DateTime(1900,1,1);
     }
 }
