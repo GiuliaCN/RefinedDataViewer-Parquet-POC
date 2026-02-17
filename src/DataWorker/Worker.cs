@@ -56,24 +56,24 @@ public class Worker : BackgroundService
 
     private async Task ProcessCatalog()
     {
+        List<Catalog> list = new();
         using (var reader = new StreamReader(_catalogPath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-            var record = new Catalog();
-            var records = csv.EnumerateRecords(record);
-            List<Catalog> list = records.ToList();
-            await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/catalog.parquet");
+            var records = csv.GetRecords<Catalog>();
+            foreach (var x in records) list.Add(x);
         }
+        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/catalog.parquet");
     }
     private async Task ProcessBaseVolume()
     {
+        List<BaseVolume> list = new();
         using (var reader = new StreamReader(_basePath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-        {
-            var record = new BaseVolume();
-            var records = csv.EnumerateRecords(record);
-            List<BaseVolume> list = records.ToList();
-            await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/basevolume.parquet");
+        {            
+            var records = csv.GetRecords<BaseVolume>();
+            foreach (var x in records) list.Add(x);
         }
+        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/basevolume.parquet");
     }
 }
