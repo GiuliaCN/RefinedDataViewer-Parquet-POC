@@ -26,7 +26,7 @@ cd ../MeuWorker
 dotnet build
 ```
 
-## Creating files (optional)
+## Creating files with python (optional)
 You can create files to use in the application with the .py scripts in the scripts folder.
 
 They will create a folder 'Data' if it doesn't exist and .csv files will be there.
