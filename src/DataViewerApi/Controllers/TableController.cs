@@ -56,6 +56,7 @@ namespace DataViewerApi.Controllers
         }
 
         [HttpPost]
+        [EndpointSummary("Add Delta - Make change to table item. Filter Options: 'Category', 'SKU'")]
         public async Task<ActionResult> Post(Delta delta)
         {
             await _deltaRepository.AddAsync(delta);
