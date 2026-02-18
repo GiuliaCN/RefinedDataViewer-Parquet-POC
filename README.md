@@ -1,38 +1,83 @@
-# RefinedDataViewer-Parquet-POC
-POC of a cloud-ready data system that visualizes and modifies large predictive datasets at an aggregated level while enforcing micro-level business rules. It minimizes SQL dependency by leveraging Parquet files and applies Event Sourcing (Delta-based changes) to ensure performance, scalability, and full traceability before consolidating updates at the granular SKU × Client level.
+# Hierarchical Data Adjustment Engine - POC
+A scalable hierarchical data reconciliation engine that separates visualization, rule application, and atomic consolidation using a delta-driven architecture.
 
-## Project Goal
-This project is a POC (Proof of Concept) of a system designed to visualize and modify data at a macro level while enforcing and respecting micro-level business rules. It includes filtering capabilities and minimizes SQL dependency by storing most data as Parquet files, without sacrificing performance. The system receives .csv files as input.
+## Overview
 
-The decision to minimize SQL usage and rely primarily on Parquet files is strategic. The architecture is designed with cloud deployment in mind, where SQL operations are generally more expensive. At the same time, performance remains a key requirement.
+This project is a Proof of Concept (POC) for a scalable hierarchical data adjustment engine designed to handle large datasets in a cloud-efficient manner.
 
-The project applies the ES (Event Sourcing) concept. Instead of updating records directly, Deltas (which also function as logs) are created for every change. Since the system handles large volumes of data, this approach reduces the amount of data written while maintaining full traceability.
+The system enables macro-level adjustments over aggregated data while guaranteeing deterministic propagation to atomic-level records.
 
-The main objective is to visualize and modify large predictive datasets. The most granular level of data (Base Volume) is defined as SKU × Client, containing a value. A Catalog dataset provides additional SKU properties that enable filtering of the Base Volume.
+It prioritizes:
 
-Data is visualized and initially modified at a higher aggregation level (GroupKey, which functions similarly to a Brand, for example). Each change is stored as a Delta. Whenever the visualization function is executed again, all Deltas are applied dynamically.
+- Scalability
+- Traceability
+- Cost-efficient cloud deployment
+- Clear separation of data abstraction layers
 
-Only when the process is finalized are the accumulated changes consolidated and written into a new Parquet file, with updates applied at the micro level (SKU × Client).
+## Architectural Principles
 
-## Logic and Implementation
+### Event Sourcing-Based Mutation
 
-### Business Rules (Hierarchy Axioms)
-To ensure data consistency, the Catalog must follow a strict one-to-many hierarchy:
+Instead of mutating datasets directly, every adjustment generates a Delta event.
 
-1. GroupKey 1 : n Categories
+This ensures:
 
-2. Category 1 : n SKUs
+- Full change traceability
+- Reduced write amplification
+- Deterministic recomputation
+- Safer concurrent modifications
 
-*(In summary: GroupKey > Category > SKU)*
+Atomic data is only rewritten during a controlled consolidation phase.
 
-### Data Layers
-The system operates across three distinct abstraction levels:
+### Parquet-First Storage Strategy
 
-- Particle Level: The raw granularity of the Base Volume (SKU x Client). Changes are only committed here during the Consolidation Process.
+The system minimizes SQL dependency by persisting large datasets as Parquet files, reducing:
 
-- Minimum Grouping (Atomic Rule): The lowest level where a business rule or filter can be applied. It serves as the bridge between raw data and business logic.
+- Cloud storage cost
+- Query engine dependency
+- Infrastructure overhead
 
-- Maximum Grouping (Visualization): A heavily aggregated layer used for UI/Dashboarding and the format in which Deltas are recorded.
+SQL is reserved only for lightweight orchestration tasks when necessary.
+
+### Hierarchical Determinism
+
+The engine enforces strict one-to-many hierarchical axioms:
+
+*Parent Node > Intermediate Node > Atomic Entity*
+
+This guarantees predictable propagation of macro-level adjustments to atomic records.
+
+## Data Abstraction Layers
+
+1. Atomic Layer: 
+The most granular dataset representation.
+Permanent changes are applied only during consolidation.
+
+2. Rule Layer: 
+Lowest grouping level where business rules and filters operate.
+
+3. Visualization Layer: 
+Highest aggregation level used for user interaction.
+All adjustments are recorded here as Delta events.
+
+## Processing Flow
+
+1. Load atomic dataset from Parquet
+2. Apply metadata hierarchy
+3. Aggregate for visualization
+4. Record adjustments as Delta events
+5. Recompute views dynamically
+6. Consolidate and persist atomic updates
+
+## Core Focus
+
+This project explores:
+
+- Hierarchical state management
+- Event-driven mutation models
+- Large-scale dataset manipulation
+- Cloud cost-aware architecture
+- Separation between visualization state and persistent state
 
 
 ## How to Run
@@ -52,13 +97,13 @@ docker-compose up -d
 
 To run the Api:
 ```
-cd src/MinhaApi
+cd src/DataViewerApi
 dotnet build
 ```
 
 To run the Worker:
 ```
-cd ../MeuWorker
+cd ../DataWorker
 dotnet build
 ```
 
@@ -67,14 +112,14 @@ You can create files to use in the application with the .py scripts in the scrip
 
 They will create a folder 'Data' if it doesn't exist and .csv files will be there.
 
-To create catalog.csv:
+To create hierarchy_schema.csv:
 ```
 cd ./scripts
-python .\create_catalog_file.py
+python .\create_hierarchy_schema_file.py
 ```
 
-To create basevolume.csv:
+To create atomic_matrix.csv:
 ```
 cd ./scripts
-python .\create_basevolume_file.py
+python .\create_atomic_matrix_file.py
 ```

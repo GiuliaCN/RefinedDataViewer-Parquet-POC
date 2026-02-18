@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 namespace Domain.Entities
 {
     // Input file and Parquet file
-    public class BaseVolume
+    public class AtomicMatrix
     {
-        public int SKU {get; set;}
-        public int Client {get; set;}
+        public int AtomicEntity {get; set;}
+        public int TargetEntity {get; set;}
         public double Value {get; set;}
     }
 }

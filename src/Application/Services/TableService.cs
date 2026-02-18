@@ -23,11 +23,11 @@ namespace Application.Services
                 List<TableItemChange> modifiedSegment = new();
                 if (FilterAccessors.TryGetValue(delta.Filter, out var acessor))
                 {
-                    modifiedSegment = listAllTableItemChange.Where(x => acessor(x) == delta.FilterValue && x.GroupKey == delta.GroupKey).ToList();        
+                    modifiedSegment = listAllTableItemChange.Where(x => acessor(x) == delta.FilterValue && x.ParentNode == delta.ParentNode).ToList();        
                 }
                 else
                 {
-                    modifiedSegment = listAllTableItemChange.Where(x => x.GroupKey == delta.GroupKey).ToList();                    
+                    modifiedSegment = listAllTableItemChange.Where(x => x.ParentNode == delta.ParentNode).ToList();                    
                 }
                 var totalSum = modifiedSegment.Sum(x => x.ChangedSumValue);
                 foreach(var item in modifiedSegment)
@@ -44,28 +44,28 @@ namespace Application.Services
             {
                 return list
                     .Where(x => acessor(x) == filterValue)
-                    .GroupBy(x => x.GroupKey)
+                    .GroupBy(x => x.ParentNode)
                     .Select(g => new TableViewLine
                     {
-                        GroupKey = g.Key,
+                        ParentNode = g.Key,
                         ChangedSumValue = g.Sum(x => x.ChangedSumValue),
                         OriginalSumValue = g.Sum(x => x.OriginalSumValue)
                     });
             }
 
             return list
-                .GroupBy(x => x.GroupKey)
+                .GroupBy(x => x.ParentNode)
                 .Select(g => new TableViewLine
                 {
-                    GroupKey = g.Key,
+                    ParentNode = g.Key,
                     ChangedSumValue = g.Sum(x => x.ChangedSumValue),
                     OriginalSumValue = g.Sum(x => x.OriginalSumValue)
                 });
         }
         private static readonly Dictionary<string, Func<TableItemChange, int>> FilterAccessors = new()
         {
-            { "SKU", x => x.SKU},
-            { "Category", x => x.Category}
+            { "AtomicEntity", x => x.AtomicEntity},
+            { "IntermediateNode", x => x.IntermediateNode}
         };
     }
 }

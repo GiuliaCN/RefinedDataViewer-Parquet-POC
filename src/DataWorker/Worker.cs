@@ -10,16 +10,16 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly string _catalogPath;
-    private readonly string _basePath;
+    private readonly string _hierarchySchemaPath;
+    private readonly string _atomicMatrixPath;
     private readonly string _processedDirectory;
 
     public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConfiguration configuration)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
-        _catalogPath = configuration.GetValue<string>("FileSettings:CatalogPath") ?? "";
-        _basePath = configuration.GetValue<string>("FileSettings:BaseVolumePath") ?? "";
+        _hierarchySchemaPath = configuration.GetValue<string>("FileSettings:HierarchySchemaPath") ?? "";
+        _atomicMatrixPath = configuration.GetValue<string>("FileSettings:AtomicMatrixPath") ?? "";
         _processedDirectory = configuration.GetValue<string>("FileSettings:ProcessedFolder") ?? "";
     }
 
@@ -39,8 +39,8 @@ public class Worker : BackgroundService
                         await repository().StartAsync(process);
                         if (process.Code == "ProcessFiles")
                         {
-                            await ProcessCatalog();
-                            await ProcessBaseVolume();
+                            await ProcessHierarchySchema();
+                            await ProcessAtomicMatrix();
                         }
                         await repository().EndAsync(process);
                     }
@@ -54,26 +54,26 @@ public class Worker : BackgroundService
         }
     }
 
-    private async Task ProcessCatalog()
+    private async Task ProcessHierarchySchema()
     {
-        List<Catalog> list = new();
-        using (var reader = new StreamReader(_catalogPath))
+        List<HierarchySchema> list = new();
+        using (var reader = new StreamReader(_hierarchySchemaPath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-            var records = csv.GetRecords<Catalog>();
+            var records = csv.GetRecords<HierarchySchema>();
             foreach (var x in records) list.Add(x);
         }
-        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/catalog.parquet");
+        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/hierarchy_schema.parquet");
     }
-    private async Task ProcessBaseVolume()
+    private async Task ProcessAtomicMatrix()
     {
-        List<BaseVolume> list = new();
-        using (var reader = new StreamReader(_basePath))
+        List<AtomicMatrix> list = new();
+        using (var reader = new StreamReader(_atomicMatrixPath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {            
-            var records = csv.GetRecords<BaseVolume>();
+            var records = csv.GetRecords<AtomicMatrix>();
             foreach (var x in records) list.Add(x);
         }
-        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/basevolume.parquet");
+        await ParquetSerializer.SerializeAsync(list, _processedDirectory + "/atomic_matrix.parquet");
     }
 }

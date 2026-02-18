@@ -12,42 +12,42 @@ namespace DataViewerApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TableController(IDeltaRepository deltaRepository, ICatalogRepository catalogRepository, ITableService tableService) : ControllerBase
+    public class TableController(IDeltaRepository deltaRepository, IHierarchySchemaRepository hierarchySchemaRepository, ITableService tableService) : ControllerBase
     {
         private readonly IDeltaRepository _deltaRepository = deltaRepository;
-        private readonly ICatalogRepository _catalogRepository = catalogRepository;
+        private readonly IHierarchySchemaRepository _hierarchySchemaRepository = hierarchySchemaRepository;
         private readonly ITableService _tableService = tableService;
 
         [HttpGet]
-        [EndpointSummary("List top 50 values available from a column of Catalog. Options: 'Category', 'SKU'")]
+        [EndpointSummary("List top 50 values available from a column of HierarchySchema. Options: 'IntermediateNode', 'AtomicEntity'")]
         [Route("/value-filters/{filter}")]
         public async Task<ActionResult> Get(string filter)
         {
-            var fullCatalog = await _catalogRepository.GetAllAsync();
-            if (filter == "Category")
+            var fullHierarchySchema = await _hierarchySchemaRepository.GetAllAsync();
+            if (filter == "IntermediateNode")
             {
-                var categories = fullCatalog.GroupBy(x => x.Category).Select(x => x.Key);
-                return Ok(categories.Take(50));
+                var hierarchies = fullHierarchySchema.GroupBy(x => x.IntermediateNode).Select(x => x.Key);
+                return Ok(hierarchies.Take(50));
             }
-            else if (filter == "SKU") return Ok(fullCatalog.Take(50).Select(x => x.SKU));
+            else if (filter == "AtomicEntity") return Ok(fullHierarchySchema.Take(50).Select(x => x.AtomicEntity));
             else return BadRequest("Invalid Filter");
         }
 
         [HttpGet]
-        [EndpointSummary("List table. Filter Options: 'Category', 'SKU'")]
-        public async Task<ActionResult> Get([FromQuery] int? category, [FromQuery] int? sku)
+        [EndpointSummary("List table. Filter Options: 'IntermediateNode', 'AtomicEntity'")]
+        public async Task<ActionResult> Get([FromQuery] int? intermediate, [FromQuery] int? atomic)
         {
             string filter = "";
             int value = 0;
-            if (sku.HasValue)
+            if (atomic.HasValue)
             {
-                filter = "SKU";
-                value = (int)sku;
+                filter = "AtomicEntity";
+                value = (int)atomic;
             }
-            else if (category.HasValue)
+            else if (intermediate.HasValue)
             {
-                filter = "Category"; 
-                value = (int)category;
+                filter = "IntermediateNode"; 
+                value = (int)intermediate;
             }
 
             var list = await _tableService.GetTableViewAsync(filter, value);
@@ -56,7 +56,7 @@ namespace DataViewerApi.Controllers
         }
 
         [HttpPost]
-        [EndpointSummary("Add Delta - Make change to table item. Filter Options: 'Category', 'SKU'")]
+        [EndpointSummary("Add Delta - Make change to table item. Filter Options: 'IntermediateNode', 'AtomicEntity'")]
         public async Task<ActionResult> Post(Delta delta)
         {
             await _deltaRepository.AddAsync(delta);

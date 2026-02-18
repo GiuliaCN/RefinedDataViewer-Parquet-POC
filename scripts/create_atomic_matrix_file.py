@@ -8,7 +8,7 @@ def main():
     data_dir = parent_dir / 'Data'
     os.makedirs(data_dir, exist_ok=True)
     
-    csv_file_path = data_dir / 'catalog.csv'
+    csv_file_path = data_dir / 'atomic_matrix.csv'
     data = CreateTable()
     
     with open(csv_file_path, mode='w', newline='') as file:
@@ -19,23 +19,22 @@ def main():
 
 
 def CreateTable():
-    groupKeyCount = random.randint(1,100)
+    atomicEntityCount = 100
     data = []
-    for i in range(1,groupKeyCount+1):
-        data += CreateGroupKey(i)
-    data.insert(0,["GroupKey","Category","SKU"])
+    for i in range(1,atomicEntityCount+1):
+        data += CreateAtomicEntity(i)
+    data.insert(0,["AtomicEntity","TargetEntity","Value"])
     return data
 
-def CreateGroupKey(id):
-    categoryCount = random.randint(1,100)
+def CreateAtomicEntity(id):
+    targetEntityCount = random.randint(200,1000)
     data = []
-    for i in range(1,categoryCount+1):
-        data += [[id] + row for row in CreateCategory(i)]
+    for i in range(1,targetEntityCount+1):
+        data += [[id] + CreateTargetEntity(i)]
     return data
     
-def CreateCategory(id):
-    skuCount = 100
-    data = [[id,i] for i in range(1,skuCount+1)]
+def CreateTargetEntity(id):
+    data = [id,random.randint(1,1000)]
     return data
 
 if __name__ == "__main__":

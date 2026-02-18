@@ -8,7 +8,7 @@ def main():
     data_dir = parent_dir / 'Data'
     os.makedirs(data_dir, exist_ok=True)
     
-    csv_file_path = data_dir / 'basevolume.csv'
+    csv_file_path = data_dir / 'hierarchy_schema.csv'
     data = CreateTable()
     
     with open(csv_file_path, mode='w', newline='') as file:
@@ -19,22 +19,23 @@ def main():
 
 
 def CreateTable():
-    groupKeyCount = random.randint(1,100)
+    parentNodeCount = random.randint(1,100)
     data = []
-    for i in range(1,groupKeyCount+1):
-        data += CreateSKU(i)
-    data.insert(0,["SKU","Client","Value"])
+    for i in range(1,parentNodeCount+1):
+        data += CreateParentNode(i)
+    data.insert(0,["ParentNode","IntermediateNode","AtomicEntity"])
     return data
 
-def CreateSKU(id):
-    clientCount = random.randint(200,1000)
+def CreateParentNode(id):
+    intermediateNodeCount = random.randint(1,100)
     data = []
-    for i in range(1,clientCount+1):
-        data += [[id] + CreateClient(i)]
+    for i in range(1,intermediateNodeCount+1):
+        data += [[id] + row for row in CreateIntermediateNode(i)]
     return data
     
-def CreateClient(id):
-    data = [id,random.randint(1,1000)]
+def CreateIntermediateNode(id):
+    atomicEntityCount = 100
+    data = [[id,i] for i in range(1,atomicEntityCount+1)]
     return data
 
 if __name__ == "__main__":

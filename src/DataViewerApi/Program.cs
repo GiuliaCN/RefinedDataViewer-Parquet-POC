@@ -12,7 +12,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddScoped<IProcessRepository, ProcessRepository>();
 builder.Services.AddScoped<IDeltaRepository, DeltaRepository>();
-builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<IHierarchySchemaRepository, HierarchySchemaRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITableService, TableService>();
 
@@ -63,7 +63,7 @@ static void EnsureDatabaseCreated(string connectionString)
         IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Delta')
         CREATE TABLE Delta (
             Id INT PRIMARY KEY IDENTITY,
-            GroupKey INT,
+            ParentNode INT,
             Value FLOAT,
             Filter VARCHAR(255),
             FilterValue INT,
